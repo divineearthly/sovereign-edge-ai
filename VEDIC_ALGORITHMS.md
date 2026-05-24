@@ -1,22 +1,25 @@
 # Vedic Algorithms for Edge AI
 
-## Nikhilam Sparsha
-Sutra: निखिलं नवतश्चरमं दशतः
-Speedup: 3.15x softmax on ARM64 NEON
-Zero exp() calls - uses base-2 with bit-shift
+## Nikhilam Sparsha — Softmax Replacement
+- **Sutra:** निखिलं नवतश्चरमं दशतः (All from 9, last from 10)
+- **Speedup:** 3.15x on ARM64 NEON
+- **Method:** Base-2 exponential via integer bit-shift + fractional polynomial
+- **Zero exp() calls** — replaces 128 expf with 32 NEON instructions
 
-## Anurupya KV Cache
-Sutra: आनुरूप्येण
-Memory: 341x reduction (512MB to 1.5MB)
-Stores only phase-change tokens
+## Anurupya KV Cache — Proportionality-Based Memory
+- **Sutra:** आनुरूप्येण (By proportionality)
+- **Memory:** 341x reduction (512MB -> 1.5MB for 2048 tokens)
+- **Method:** Detects K_new proportional to K_last; replaces instead of appending
 
-## Vilokanam
-Sutra: विलोकनम्
-Speedup: 1.34x output projection
-Script-aware vocabulary filtering
+## Vilokanam — Script-Aware Vocabulary Filter
+- **Sutra:** विलोकनम् (By mere observation)
+- **Speedup:** 1.34x on output projection
+- **Method:** Detects script from hidden state, restricts search to sub-vocabulary
 
-## Triguna Qutrit
-3-state activation: Sattva-Rajas-Tamas
+## Triguna Qutrit — 3-State Activation
+- **Principle:** Sattva-Rajas-Tamas gunas
+- **Method:** |x| < threshold -> 0 (Tamas), else sin*cos activation (Rajas)
 
-## Shunyata
-NEON weight pruning below threshold
+## Shunyata — NEON Weight Pruning
+- **Principle:** Zero as the most powerful number
+- **Method:** Vectorized threshold comparison, sets sub-threshold weights to zero
