@@ -1,22 +1,22 @@
-# Vedic Algorithms
+# Vedic Algorithms for Edge AI
 
 ## Nikhilam Sparsha
-Sutra: All from 9, last from 10
-Speedup: 3.15x softmax on ARM64
-Method: Base-2 exponential with NEON bit-shift, zero exp() calls
+Sutra: निखिलं नवतश्चरमं दशतः
+Speedup: 3.15x softmax on ARM64 NEON
+Zero exp() calls - uses base-2 with bit-shift
 
 ## Anurupya KV Cache
-Sutra: By proportionality
-Memory: 341x reduction
-Method: Proportional key detection, stores only phase-change tokens
+Sutra: आनुरूप्येण
+Memory: 341x reduction (512MB to 1.5MB)
+Stores only phase-change tokens
 
 ## Vilokanam
-Sutra: By mere observation
+Sutra: विलोकनम्
 Speedup: 1.34x output projection
-Method: Script detection from hidden state, sparse vocabulary search
+Script-aware vocabulary filtering
 
 ## Triguna Qutrit
-3-state activation: Sattva-Rajas-Tamas gating
+3-state activation: Sattva-Rajas-Tamas
 
 ## Shunyata
-NEON vectorized weight pruning below threshold
+NEON weight pruning below threshold
