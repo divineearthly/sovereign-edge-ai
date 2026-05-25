@@ -1,13 +1,13 @@
 From 16d5b94100a0652a02cbbec256521a8b35834fbd Mon Sep 17 00:00:00 2001
-From: Joydeep Das | Divine Earthly <divineearthly@gmail.com>
+From: Joydeep Das <divineearthly@gmail.com>
 Date: Mon, 25 May 2026 08:56:43 +0000
 Subject: [PATCH] Vedic softmax backend hook for llama.cpp
 
 ---
- ggml/src/ggml-cpu/CMakeLists.txt |  2 ++
+ ggml/src/ggml-cpu/CMakeLists.txt | 2 ++
  ggml/src/ggml-cpu/ggml-cpu.c     | 12 +++++++++++-
  ggml/src/ggml-cpu/vedic_ops.c    | 31 +++++++++++++++++++++++++++++++
- ggml/src/ggml-cpu/vedic_ops.h    |  4 ++++
+ ggml/src/ggml-cpu/vedic_ops.h    | 4 ++++
  4 files changed, 48 insertions(+), 1 deletion(-)
  create mode 100644 ggml/src/ggml-cpu/vedic_ops.c
  create mode 100644 ggml/src/ggml-cpu/vedic_ops.h
@@ -22,7 +22,7 @@ index 8c735a0..62a271e 100644
          ggml-cpu/ggml-cpu.c
 +        ggml-cpu/vedic_ops.c
          ggml-cpu/ggml-cpu.cpp
-+        ggml-cpu/vedic_ops.c
++        ggml-cpu/vedic_ops.h
          ggml-cpu/repack.cpp
          ggml-cpu/repack.h
          ggml-cpu/hbm.cpp
@@ -32,8 +32,8 @@ index cd5c61a..8440e7b 100644
 +++ b/ggml/src/ggml-cpu/ggml-cpu.c
 @@ -1,3 +1,4 @@
 +#include "vedic_ops.h"
- #define _CRT_SECURE_NO_DEPRECATE // Disables "unsafe" warnings on Windows
- #define _USE_MATH_DEFINES // For M_PI on MSVC
+ #define _CRT_SECURE_NO_DEPRECATE
+ #define _USE_MATH_DEFINES
  
 @@ -1878,7 +1879,16 @@ static void ggml_compute_forward(struct ggml_compute_params * params, struct ggm
              } break;
@@ -102,4 +102,3 @@ index 0000000..39ec673
 +#endif
 -- 
 2.53.0
-
