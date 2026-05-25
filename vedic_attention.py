@@ -113,7 +113,7 @@ class SamanvayaAttention(nn.Module):
         x = x.reshape(-1, self.head_dim)
         
         # Split into bands and compute energy
-        bands = x.view(-1, self.num_svaras, self.band_size)
+        bands = x[:, :self.num_svaras * self.band_size].reshape(-1, self.num_svaras, self.band_size)
         energy = (bands ** 2).sum(dim=-1)  # [N, num_svaras]
         
         return energy.view(*shape, self.num_svaras)
