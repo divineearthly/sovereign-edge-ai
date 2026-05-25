@@ -1,0 +1,105 @@
+From 16d5b94100a0652a02cbbec256521a8b35834fbd Mon Sep 17 00:00:00 2001
+From: Joydeep Das | Divine Earthly <divineearthly@gmail.com>
+Date: Mon, 25 May 2026 08:56:43 +0000
+Subject: [PATCH] Vedic softmax backend hook for llama.cpp
+
+---
+ ggml/src/ggml-cpu/CMakeLists.txt |  2 ++
+ ggml/src/ggml-cpu/ggml-cpu.c     | 12 +++++++++++-
+ ggml/src/ggml-cpu/vedic_ops.c    | 31 +++++++++++++++++++++++++++++++
+ ggml/src/ggml-cpu/vedic_ops.h    |  4 ++++
+ 4 files changed, 48 insertions(+), 1 deletion(-)
+ create mode 100644 ggml/src/ggml-cpu/vedic_ops.c
+ create mode 100644 ggml/src/ggml-cpu/vedic_ops.h
+
+diff --git a/ggml/src/ggml-cpu/CMakeLists.txt b/ggml/src/ggml-cpu/CMakeLists.txt
+index 8c735a0..62a271e 100644
+--- a/ggml/src/ggml-cpu/CMakeLists.txt
++++ b/ggml/src/ggml-cpu/CMakeLists.txt
+@@ -28,7 +28,9 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
+ 
+     list (APPEND GGML_CPU_SOURCES
+         ggml-cpu/ggml-cpu.c
++        ggml-cpu/vedic_ops.c
+         ggml-cpu/ggml-cpu.cpp
++        ggml-cpu/vedic_ops.c
+         ggml-cpu/repack.cpp
+         ggml-cpu/repack.h
+         ggml-cpu/hbm.cpp
+diff --git a/ggml/src/ggml-cpu/ggml-cpu.c b/ggml/src/ggml-cpu/ggml-cpu.c
+index cd5c61a..8440e7b 100644
+--- a/ggml/src/ggml-cpu/ggml-cpu.c
++++ b/ggml/src/ggml-cpu/ggml-cpu.c
+@@ -1,3 +1,4 @@
++#include "vedic_ops.h"
+ #define _CRT_SECURE_NO_DEPRECATE // Disables "unsafe" warnings on Windows
+ #define _USE_MATH_DEFINES // For M_PI on MSVC
+ 
+@@ -1878,7 +1879,16 @@ static void ggml_compute_forward(struct ggml_compute_params * params, struct ggm
+             } break;
+         case GGML_OP_SOFT_MAX:
+             {
+-                ggml_compute_forward_soft_max(params, tensor);
++                struct ggml_tensor * src0 = tensor->src[0];
++                int n = (int)ggml_nelements(src0);
++                float temp = 1.0f;
++                if (src0->ne[0] > 0) {
++                    temp = 1.0f / sqrtf((float)src0->ne[0]);
++                }
++                if (ggml_vedic_softmax_forward(
++                        (float*)src0->data, (float*)tensor->data, n, temp) != 0) {
++                    ggml_compute_forward_soft_max(params, tensor);
++                }
+             } break;
+         case GGML_OP_SOFT_MAX_BACK:
+             {
+diff --git a/ggml/src/ggml-cpu/vedic_ops.c b/ggml/src/ggml-cpu/vedic_ops.c
+new file mode 100644
+index 0000000..2ce6e05
+--- /dev/null
++++ b/ggml/src/ggml-cpu/vedic_ops.c
+@@ -0,0 +1,31 @@
++#include "ggml.h"
++#include "ggml-cpu.h"
++#include <dlfcn.h>
++#include <stdlib.h>
++
++static void* vedic_lib = NULL;
++static void (*vedic_softmax_fn)(const float*, float*, int, float) = NULL;
++
++static int vedic_backend_init(void) {
++    const char* paths[] = {
++        "libvedic_full.so",
++        "./libvedic_full.so",
++        "/workspaces/sovereign-edge-ai/libvedic_full.so",
++        NULL
++    };
++    for (int i = 0; paths[i]; i++) {
++        vedic_lib = dlopen(paths[i], RTLD_NOW);
++        if (vedic_lib) break;
++    }
++    if (!vedic_lib) return -1;
++    vedic_softmax_fn = dlsym(vedic_lib, "nikhilam_sparsha_attention_normalize");
++    return vedic_softmax_fn ? 0 : -1;
++}
++
++int ggml_vedic_softmax_forward(const float* src, float* dst, int n, float temp) {
++    if (!vedic_softmax_fn && vedic_backend_init() != 0) {
++        return -1;
++    }
++    vedic_softmax_fn(src, dst, n, temp);
++    return 0;
++}
+diff --git a/ggml/src/ggml-cpu/vedic_ops.h b/ggml/src/ggml-cpu/vedic_ops.h
+new file mode 100644
+index 0000000..39ec673
+--- /dev/null
++++ b/ggml/src/ggml-cpu/vedic_ops.h
+@@ -0,0 +1,4 @@
++#ifndef GGML_VEDIC_OPS_H
++#define GGML_VEDIC_OPS_H
++int ggml_vedic_softmax_forward(const float* src, float* dst, int n, float temp);
++#endif
+-- 
+2.53.0
+
