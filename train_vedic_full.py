@@ -122,11 +122,9 @@ class VedicNyayaLoss(nn.Module):
                           torch.log(self.running_avg.unsqueeze(0) + 1e-8))) / logits.shape[0]
         
         # Upamana: Cosine similarity to uniform (ideal) distribution
-        uniform = torch.ones_like(probs) / self.vocab_size
-        cos_sim = nn.functional.cosine_similarity(
-            probs.view(-1, self.vocab_size), 
-            uniform.unsqueeze(0).expand_as(probs.view(-1, self.vocab_size))
-        ).mean()
+        flat_probs = probs.reshape(-1, self.vocab_size)
+        uniform = torch.ones(1, self.vocab_size, device=probs.device) / self.vocab_size
+        cos_sim = nn.functional.cosine_similarity(flat_probs, uniform).mean()
         upamana = 1.0 - cos_sim  # Minimize deviation from uniform
         
         # Shabda: L2 regularization (Vedic constraint)
