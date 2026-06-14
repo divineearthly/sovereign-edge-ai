@@ -1,43 +1,5 @@
 {
-  "location": {
-    "name": "Silchar, Assam",
-    "lat": 24.81,
-    "lon": 92.80,
-    "elevation_m": 22
-  },
-  "last_sync": "2024-01-01",
-  "monthly_weather": {
-    "1": {"temp_c": 18.5, "rainfall_mm": 8.2, "humidity_pct": 78},
-    "2": {"temp_c": 21.0, "rainfall_mm": 15.3, "humidity_pct": 72},
-    "3": {"temp_c": 25.2, "rainfall_mm": 55.8, "humidity_pct": 68},
-    "4": {"temp_c": 27.8, "rainfall_mm": 162.4, "humidity_pct": 74},
-    "5": {"temp_c": 28.5, "rainfall_mm": 342.1, "humidity_pct": 80},
-    "6": {"temp_c": 29.2, "rainfall_mm": 498.3, "humidity_pct": 84},
-    "7": {"temp_c": 29.0, "rainfall_mm": 411.5, "humidity_pct": 85},
-    "8": {"temp_c": 29.1, "rainfall_mm": 338.7, "humidity_pct": 84},
-    "9": {"temp_c": 28.7, "rainfall_mm": 282.4, "humidity_pct": 83},
-    "10": {"temp_c": 26.8, "rainfall_mm": 142.6, "humidity_pct": 80},
-    "11": {"temp_c": 23.1, "rainfall_mm": 28.3, "humidity_pct": 77},
-    "12": {"temp_c": 19.4, "rainfall_mm": 6.1, "humidity_pct": 78}
-  },
-  "seasons": {
-    "kharif": {
-      "months": [6,7,8,9,10],
-      "crops": ["Rice (Sali)", "Jute", "Sugarcane", "Maize"],
-      "pest_alerts": ["Stem borer (rice)", "Brown planthopper", "Jute semilooper"],
-      "soil_advice": "Maintain standing water 5-7cm for rice. Apply neem cake for pest prevention."
-    },
-    "rabi": {
-      "months": [11,12,1,2,3],
-      "crops": ["Mustard", "Wheat", "Potato", "Pulses (masoor, gram)"],
-      "pest_alerts": ["Mustard aphid", "Alternaria blight", "White rust"],
-      "soil_advice": "Ensure proper drainage. Apply vermicompost 2t/ha before sowing."
-    },
-    "zaid": {
-      "months": [4,5],
-      "crops": ["Green gram", "Black gram", "Summer vegetables"],
-      "pest_alerts": ["Pod borer", "Whitefly", "Mites"],
-      "soil_advice": "Short-duration crops only. Mulch to conserve moisture."
-    }
-  }
+  "What is Vedic AI?": "Vedic AI combines 64 ancient Vedic mathematical sutras (Urdhva Tiryagbhyam, Nikhilam, etc.) with modern neural architectures for sovereign edge computing. It runs natively on ARM64 without cloud dependency.",
+  "What is Brahman?": "Brahman is the ultimate reality in Vedic philosophy - infinite, eternal, unchanging consciousness that is the ground of all existence. As the Upanishads declare: Sarvam Khalvidam Brahma (All this is Brahman).",
+  "Explain karma yoga": "Karma Yoga is the path of selfless action taught by Sri Krishna in the Bhagavad Gita. Perform your duties without attachment to results, offering all actions to the Divine. As Krishna says: Yogah Karmasu Kaushalam (Yoga is skill in action)."
 }
