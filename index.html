@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🕉 Sovereign Vedic AGI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e0d8c0;font-family:'Courier New',monospace;height:100vh;display:flex;flex-direction:column}
+.header{background:#1a1a2e;padding:15px;text-align:center;border-bottom:1px solid #c9a84c}
+.header h1{color:#c9a84c;font-size:1.3em}
+.status{display:flex;justify-content:center;gap:20px;margin-top:8px;font-size:0.7em}
+.status span{background:#16213e;padding:4px 12px;border-radius:10px}
+.chat{flex:1;overflow-y:auto;padding:15px}
+.msg{margin:10px 0;max-width:90%;padding:10px 15px;border-radius:10px}
+.user{background:#1a3a1a;margin-left:auto;text-align:right;border-bottom-right-radius:2px}
+.agi{background:#1a1a3a;margin-right:auto;text-align:left;border-bottom-left-radius:2px;border-left:2px solid #c9a84c}
+.agi .domain{font-size:0.65em;color:#888;margin-top:4px}
+.agi .sent{font-size:0.65em;color:#c9a84c;margin-top:2px}
+.input-area{background:#1a1a2e;padding:12px;display:flex;gap:8px;border-top:1px solid #333}
+.input-area input{flex:1;background:#0a0a1a;border:1px solid #333;color:#e0d8c0;padding:10px;border-radius:5px;font-family:monospace}
+.input-area button{background:#c9a84c;color:#000;border:none;padding:10px 20px;border-radius:5px;font-weight:bold;cursor:pointer}
+.input-area button:active{background:#a88a3c}
+</style>
+</head>
+<body>
+<div class="header">
+    <h1>🕉 Sovereign Vedic AGI</h1>
+    <div class="status">
+        <span id="st-vedic">🔴 Vedic</span>
+        <span id="st-model">🔴 Model</span>
+        <span id="st-cache">🔴 Cache</span>
+    </div>
+</div>
+<div class="chat" id="chat">
+    <div class="msg agi">
+        <div>🕉 Welcome. Ask any question.</div>
+        <div class="domain">System</div>
+    </div>
+</div>
+<div class="input-area">
+    <input id="query" type="text" placeholder="Ask the Vedic AGI..." onkeydown="if(event.key==='Enter')send()">
+    <button onclick="send()">Send</button>
+</div>
+<script>
+async function checkHealth(){
+    try{
+        let r=await fetch('/health');
+        let d=await r.json();
+        document.getElementById('st-vedic').textContent=(d.vedic?'🟢':'🔴')+' Vedic';
+        document.getElementById('st-model').textContent=(d.model?'🟢':'🔴')+' Model';
+        document.getElementById('st-cache').textContent=(d.cache?'🟢':'🔴')+' Cache';
+    }catch(e){}
+}
+async function send(){
+    let q=document.getElementById('query').value.trim();
+    if(!q)return;
+    document.getElementById('query').value='';
+    let chat=document.getElementById('chat');
+    chat.innerHTML+=`<div class="msg user">${q}</div>`;
+    try{
+        let r=await fetch('/infer',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({prompt:q,lang:'en'})
+        });
+        let d=await r.json();
+        chat.innerHTML+=`<div class="msg agi"><div>${d.text||d.response||'...'}</div><div class="domain">Confidence: ${(d.confidence*100||0).toFixed(0)}%</div></div>`;
+    }catch(e){
+        chat.innerHTML+=`<div class="msg agi"><div>Connection error. Is server running?</div></div>`;
+    }
+    chat.scrollTop=chat.scrollHeight;
+}
+checkHealth();
+setInterval(checkHealth,5000);
+</script>
+</body>
+</html>
